@@ -3,6 +3,7 @@ service: workshop-tomjo
 plugins:
   - serverless-pseudo-parameters
   - serverless-iam-roles-per-function
+  - serverless-plugin-tracing
 
 provider:
   name: aws
@@ -11,6 +12,14 @@ provider:
   region: eu-west-1
   tags:
     TEAM: test
+  tracing: true
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "xray:PutTraceSegments"
+        - "xray:PutTelemetryRecords"
+      Resource:
+        - "*"
   environment:
     log_level: ${self:custom.logLevel.${self:custom.stage}, self:custom.logLevel.default}
 
@@ -19,6 +28,9 @@ custom:
   logLevel:
     prod: INFO
     default: DEBUG
+  serverless-iam-roles-per-function:
+    defaultInherit: true
+
 functions:
   get-index:
     handler: functions/get-index.handler
