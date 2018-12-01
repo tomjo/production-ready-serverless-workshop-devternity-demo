@@ -95,12 +95,23 @@ const we_invoke_get_index = async () => {
 
     return res;
 };
-const we_invoke_get_restaurants = () => viaHandler({}, 'get-restaurants');
-const we_invoke_search_restaurants = theme => {
-    let event = {
-        body: JSON.stringify({ theme })
-    };
-    return viaHandler(event, 'search-restaurants')
+const we_invoke_get_restaurants = async () => {
+    const res =
+        mode === 'handler'
+            ? await viaHandler({}, 'get-restaurants')
+            : await viaHttp('restaurants', 'GET', { iam_auth: true });
+
+    return res
+};
+const we_invoke_search_restaurants = async (theme) => {
+    const body = JSON.stringify({ theme });
+
+    const res =
+        mode === 'handler'
+            ? viaHandler({ body }, 'search-restaurants')
+            : viaHttp('restaurants/search', 'POST', { body });
+
+    return res
 };
 const we_invoke_place_order = async (restaurantName) => {
     const body = JSON.stringify({ restaurantName });
