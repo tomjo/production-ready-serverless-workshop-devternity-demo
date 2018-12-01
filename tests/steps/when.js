@@ -18,12 +18,17 @@ const we_invoke_get_restaurants = () => viaHandler({}, 'get-restaurants');
 const we_invoke_search_restaurants = theme => {
     let event = {
         body: JSON.stringify({ theme })
-    }
+    };
     return viaHandler(event, 'search-restaurants')
-}
+};
+const we_invoke_place_order = async (restaurantName) => {
+    const body = JSON.stringify({ restaurantName });
+    return viaHandler({ body }, 'place-order')
+};
 
 module.exports = {
     we_invoke_get_index,
     we_invoke_get_restaurants,
-    we_invoke_search_restaurants
+    we_invoke_search_restaurants,
+    we_invoke_place_order
 };
