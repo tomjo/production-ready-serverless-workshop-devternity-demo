@@ -21,6 +21,7 @@ provider:
       Resource:
         - "*"
   environment:
+    STAGE: ${self:custom.stage}
     log_level: ${self:custom.logLevel.${self:custom.stage}, self:custom.logLevel.default}
 
 custom:
