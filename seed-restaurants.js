@@ -1,9 +1,9 @@
-const { REGION, STAGE } = process.env
+const { REGION, STAGE } = process.env;
 
-const AWS = require('aws-sdk')
-AWS.config.region = REGION
-const dynamodb = new AWS.DynamoDB.DocumentClient()
-const ssm = new AWS.SSM()
+const AWS = require('aws-sdk');
+AWS.config.region = REGION;
+const dynamodb = new AWS.DynamoDB.DocumentClient();
+const ssm = new AWS.SSM();
 
 let restaurants = [
   { 
@@ -49,25 +49,30 @@ let restaurants = [
 ];
 
 const getTableName = async () => {
-  return `restaurants-${STAGE}-tomjo`
-}
+    console.log('getting table name...');
+    const req = {
+        Name: `/workshop-tomjo/${STAGE}/table_name`
+    };
+    const ssmResp = await ssm.getParameter(req).promise();
+    return ssmResp.Parameter.Value;
+};
 
 const run = async () => {
-  const tableName = await getTableName()
+  const tableName = await getTableName();
 
-  console.log(`table name: `, tableName)
+  console.log(`table name: `, tableName);
 
   let putReqs = restaurants.map(x => ({
     PutRequest: {
       Item: x
     }
-  }))
+  }));
   
   const req = { 
     RequestItems: {}
-  }
-  req.RequestItems[tableName] = putReqs
+  };
+  req.RequestItems[tableName] = putReqs;
   await dynamodb.batchWrite(req).promise()
-}
+};
 
-run().then(() => console.log("all done")).catch(err => console.error(err.message))
+run().then(() => console.log("all done")).catch(err => console.error(err.message));
