@@ -195,7 +195,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/workshop-tomjo/dev/1543671760158-2018-12-01T13:42:40.158Z/workshop-tomjo.zip"
+                "S3Key": "serverless/workshop-tomjo/dev/1543675530815-2018-12-01T14:45:30.815Z/workshop-tomjo.zip"
               },
               "FunctionName": "workshop-tomjo-dev-get-index",
               "Handler": "functions/get-index.handler",
@@ -256,14 +256,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "GetDashindexLambdaVersionb6fEDBv3xy4gqyChhtexzOBUQJXWYfBYCpgma7Gs": {
+          "GetDashindexLambdaVersion1gZG2Nnq43yhegow6WU3q3qtcm7EMGG7tzh4ReeJXos": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetDashindexLambdaFunction"
               },
-              "CodeSha256": "ag/F9qjS/ooMjvyUS4qNt5vvMdyREe8L9WuufKilL0M="
+              "CodeSha256": "I0GaTq8M99Z2RNQDdrBvXACjGW8oOyCrfAJ4jP6mKI4="
             }
           },
           "GetDashrestaurantsLambdaFunction": {
@@ -273,7 +273,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/workshop-tomjo/dev/1543671760158-2018-12-01T13:42:40.158Z/workshop-tomjo.zip"
+                "S3Key": "serverless/workshop-tomjo/dev/1543675530815-2018-12-01T14:45:30.815Z/workshop-tomjo.zip"
               },
               "FunctionName": "workshop-tomjo-dev-get-restaurants",
               "Handler": "functions/get-restaurants.handler",
@@ -309,14 +309,14 @@
               "GetDashrestaurantsLogGroup"
             ]
           },
-          "GetDashrestaurantsLambdaVersionnB47QcdXFvgOX27aampIBOFXQzE6dlLalR5GcCfLxo": {
+          "GetDashrestaurantsLambdaVersionAsReoepkPitjNSxO3WteDBRj52KkJ5ZYOBVNy5mLxy0": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetDashrestaurantsLambdaFunction"
               },
-              "CodeSha256": "ag/F9qjS/ooMjvyUS4qNt5vvMdyREe8L9WuufKilL0M="
+              "CodeSha256": "I0GaTq8M99Z2RNQDdrBvXACjGW8oOyCrfAJ4jP6mKI4="
             }
           },
           "SearchDashrestaurantsLambdaFunction": {
@@ -326,7 +326,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/workshop-tomjo/dev/1543671760158-2018-12-01T13:42:40.158Z/workshop-tomjo.zip"
+                "S3Key": "serverless/workshop-tomjo/dev/1543675530815-2018-12-01T14:45:30.815Z/workshop-tomjo.zip"
               },
               "FunctionName": "workshop-tomjo-dev-search-restaurants",
               "Handler": "functions/search-restaurants.handler",
@@ -362,14 +362,14 @@
               "SearchDashrestaurantsLogGroup"
             ]
           },
-          "SearchDashrestaurantsLambdaVersiondocz71J2R3EPX6IeKPvXBoWR302RMb7nyM28IHRqw": {
+          "SearchDashrestaurantsLambdaVersionvN5VYvC3SVUHDtYAnGHjg5NvgzTsDrftf5Igf8K0": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SearchDashrestaurantsLambdaFunction"
               },
-              "CodeSha256": "ag/F9qjS/ooMjvyUS4qNt5vvMdyREe8L9WuufKilL0M="
+              "CodeSha256": "I0GaTq8M99Z2RNQDdrBvXACjGW8oOyCrfAJ4jP6mKI4="
             }
           },
           "PlaceDashorderLambdaFunction": {
@@ -379,7 +379,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/workshop-tomjo/dev/1543671760158-2018-12-01T13:42:40.158Z/workshop-tomjo.zip"
+                "S3Key": "serverless/workshop-tomjo/dev/1543675530815-2018-12-01T14:45:30.815Z/workshop-tomjo.zip"
               },
               "FunctionName": "workshop-tomjo-dev-place-order",
               "Handler": "functions/place-order.handler",
@@ -415,14 +415,14 @@
               "PlaceDashorderLogGroup"
             ]
           },
-          "PlaceDashorderLambdaVersionJADPAPMhjlebb6q8DM3awX2ZfJkIIPhIWKYYE1HhADY": {
+          "PlaceDashorderLambdaVersiond8nSyKYqfwFyHjuhVvmQ57CP74p7NX59OwNIJQcNfKM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "PlaceDashorderLambdaFunction"
               },
-              "CodeSha256": "ag/F9qjS/ooMjvyUS4qNt5vvMdyREe8L9WuufKilL0M="
+              "CodeSha256": "I0GaTq8M99Z2RNQDdrBvXACjGW8oOyCrfAJ4jP6mKI4="
             }
           },
           "NotifyDashrestaurantLambdaFunction": {
@@ -432,7 +432,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/workshop-tomjo/dev/1543671760158-2018-12-01T13:42:40.158Z/workshop-tomjo.zip"
+                "S3Key": "serverless/workshop-tomjo/dev/1543675530815-2018-12-01T14:45:30.815Z/workshop-tomjo.zip"
               },
               "FunctionName": "workshop-tomjo-dev-notify-restaurant",
               "Handler": "functions/notify-restaurant.handler",
@@ -471,14 +471,14 @@
               "NotifyDashrestaurantLogGroup"
             ]
           },
-          "NotifyDashrestaurantLambdaVersionrFmg9tpnIymwmanAHliaxBKbsioovQctPdNRqJk": {
+          "NotifyDashrestaurantLambdaVersionkMav7MiOmPOacPP31HInYiVmBUl4JUsynlBpJBeYpE": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "NotifyDashrestaurantLambdaFunction"
               },
-              "CodeSha256": "ag/F9qjS/ooMjvyUS4qNt5vvMdyREe8L9WuufKilL0M="
+              "CodeSha256": "I0GaTq8M99Z2RNQDdrBvXACjGW8oOyCrfAJ4jP6mKI4="
             }
           },
           "ApiGatewayRestApi": {
@@ -709,7 +709,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1543671760657": {
+          "ApiGatewayDeployment1543675531684": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -1334,31 +1334,31 @@
           "GetDashindexLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetDashindexLambdaVersionb6fEDBv3xy4gqyChhtexzOBUQJXWYfBYCpgma7Gs"
+              "Ref": "GetDashindexLambdaVersion1gZG2Nnq43yhegow6WU3q3qtcm7EMGG7tzh4ReeJXos"
             }
           },
           "GetDashrestaurantsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetDashrestaurantsLambdaVersionnB47QcdXFvgOX27aampIBOFXQzE6dlLalR5GcCfLxo"
+              "Ref": "GetDashrestaurantsLambdaVersionAsReoepkPitjNSxO3WteDBRj52KkJ5ZYOBVNy5mLxy0"
             }
           },
           "SearchDashrestaurantsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SearchDashrestaurantsLambdaVersiondocz71J2R3EPX6IeKPvXBoWR302RMb7nyM28IHRqw"
+              "Ref": "SearchDashrestaurantsLambdaVersionvN5VYvC3SVUHDtYAnGHjg5NvgzTsDrftf5Igf8K0"
             }
           },
           "PlaceDashorderLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "PlaceDashorderLambdaVersionJADPAPMhjlebb6q8DM3awX2ZfJkIIPhIWKYYE1HhADY"
+              "Ref": "PlaceDashorderLambdaVersiond8nSyKYqfwFyHjuhVvmQ57CP74p7NX59OwNIJQcNfKM"
             }
           },
           "NotifyDashrestaurantLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "NotifyDashrestaurantLambdaVersionrFmg9tpnIymwmanAHliaxBKbsioovQctPdNRqJk"
+              "Ref": "NotifyDashrestaurantLambdaVersionkMav7MiOmPOacPP31HInYiVmBUl4JUsynlBpJBeYpE"
             }
           },
           "ServiceEndpoint": {
@@ -1637,7 +1637,7 @@
     "artifact": "C:\\workspace\\production-ready-serverless-workshop-devternity-demo\\.serverless\\workshop-tomjo.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/workshop-tomjo/dev/1543671760158-2018-12-01T13:42:40.158Z",
+    "artifactDirectoryName": "serverless/workshop-tomjo/dev/1543675530815-2018-12-01T14:45:30.815Z",
     "artifact": "workshop-tomjo.zip"
   }
 }

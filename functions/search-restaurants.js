@@ -1,5 +1,9 @@
-const AWS = require('aws-sdk');
+const AWSXRay = require('aws-xray-sdk-core');
+const AWS = process.env.LAMBDA_RUNTIME_DIR
+    ? AWSXRay.captureAWS(require('aws-sdk'))
+    : require('aws-sdk');
 const dynamodb = new AWS.DynamoDB.DocumentClient();
+const wrap = require('../lib/wrapper');
 
 const defaultResults = process.env.defaultResults || 8;
 const tableName = process.env.restaurants_table;
@@ -25,5 +29,5 @@ module.exports.handler = wrap(async (event, context) => {
     body: JSON.stringify(restaurants)
   };
 
-  return response
+  return response;
 });
