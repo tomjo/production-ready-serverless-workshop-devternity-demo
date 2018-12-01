@@ -1,9 +1,6 @@
 const fs = require("fs");
 const Mustache = require('mustache');
-const AWSXRay = require('aws-xray-sdk-core');
-const https = process.env.LAMBDA_RUNTIME_DIR
-    ? AWSXRay.captureHTTPs(require('https'))
-    : require('https');
+const https = require('../lib/https');
 const URL = require('url');
 const Log = require('../lib/log');
 const wrap = require('../lib/wrapper');
