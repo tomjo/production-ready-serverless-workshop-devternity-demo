@@ -1,0 +1,1262 @@
+{
+  "service": {
+    "service": "workshop-tomjo",
+    "serviceObject": {
+      "name": "workshop-tomjo"
+    },
+    "provider": {
+      "stage": "dev",
+      "region": "eu-west-1",
+      "variableSyntax": "\\${([ ~:a-zA-Z0-9._'\",\\-\\/\\(\\)]+?)}",
+      "name": "aws",
+      "runtime": "nodejs8.10",
+      "tags": {
+        "TEAM": "test"
+      },
+      "iamRoleStatements": [
+        {
+          "Effect": "Allow",
+          "Action": "dynamodb:scan",
+          "Resource": {
+            "Fn::GetAtt": [
+              "restaurantsTable",
+              "Arn"
+            ]
+          }
+        },
+        {
+          "Effect": "Allow",
+          "Action": "kinesis:PutRecord",
+          "Resource": {
+            "Fn::GetAtt": [
+              "orderEventsStream",
+              "Arn"
+            ]
+          }
+        },
+        {
+          "Effect": "Allow",
+          "Action": "sns:Publish",
+          "Resource": {
+            "Ref": "restaurantNotificationTopic"
+          }
+        }
+      ],
+      "versionFunctions": true,
+      "remoteFunctionData": null,
+      "compiledCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket"
+          },
+          "GetDashindexLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/workshop-tomjo-dev-get-index"
+            }
+          },
+          "GetDashrestaurantsLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/workshop-tomjo-dev-get-restaurants"
+            }
+          },
+          "SearchDashrestaurantsLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/workshop-tomjo-dev-search-restaurants"
+            }
+          },
+          "PlaceDashorderLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/workshop-tomjo-dev-place-order"
+            }
+          },
+          "NotifyDashrestaurantLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/workshop-tomjo-dev-notify-restaurant"
+            }
+          },
+          "IamRoleLambdaExecution": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": [
+                      "sts:AssumeRole"
+                    ]
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "dev",
+                        "workshop-tomjo",
+                        "lambda"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:CreateLogStream"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/workshop-tomjo-dev-get-index:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/workshop-tomjo-dev-get-restaurants:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/workshop-tomjo-dev-search-restaurants:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/workshop-tomjo-dev-place-order:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/workshop-tomjo-dev-notify-restaurant:*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:PutLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/workshop-tomjo-dev-get-index:*:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/workshop-tomjo-dev-get-restaurants:*:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/workshop-tomjo-dev-search-restaurants:*:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/workshop-tomjo-dev-place-order:*:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/workshop-tomjo-dev-notify-restaurant:*:*"
+                          }
+                        ]
+                      },
+                      {
+                        "$ref": "$[\"service\"][\"provider\"][\"iamRoleStatements\"][0]"
+                      },
+                      {
+                        "$ref": "$[\"service\"][\"provider\"][\"iamRoleStatements\"][1]"
+                      },
+                      {
+                        "$ref": "$[\"service\"][\"provider\"][\"iamRoleStatements\"][2]"
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "kinesis:GetRecords",
+                          "kinesis:GetShardIterator",
+                          "kinesis:DescribeStream",
+                          "kinesis:ListStreams"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::GetAtt": [
+                              "orderEventsStream",
+                              "Arn"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ],
+              "Path": "/",
+              "RoleName": {
+                "Fn::Join": [
+                  "-",
+                  [
+                    "workshop-tomjo",
+                    "dev",
+                    {
+                      "Fn::Sub": "${AWS::Region}"
+                    },
+                    "lambdaRole"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetDashindexLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/workshop-tomjo/dev/1543656737471-2018-12-01T09:32:17.471Z/workshop-tomjo.zip"
+              },
+              "FunctionName": "workshop-tomjo-dev-get-index",
+              "Handler": "functions/get-index.handler",
+              "MemorySize": 1024,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs8.10",
+              "Timeout": 6,
+              "Tags": [
+                {
+                  "Key": "TEAM",
+                  "Value": "test"
+                }
+              ],
+              "Environment": {
+                "Variables": {
+                  "restaurants_api": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "https://",
+                        {
+                          "Ref": "ApiGatewayRestApi"
+                        },
+                        {
+                          "Fn::Sub": ".execute-api.${AWS::Region}.amazonaws.com/dev/restaurants"
+                        }
+                      ]
+                    ]
+                  },
+                  "orders_api": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "https://",
+                        {
+                          "Ref": "ApiGatewayRestApi"
+                        },
+                        {
+                          "Fn::Sub": ".execute-api.${AWS::Region}.amazonaws.com/dev/orders"
+                        }
+                      ]
+                    ]
+                  }
+                }
+              }
+            },
+            "DependsOn": [
+              "GetDashindexLogGroup",
+              "IamRoleLambdaExecution"
+            ]
+          },
+          "GetDashindexLambdaVersion0oyYDAewWAO3YUVMzTFoJf1z64ZBygIaXHAaecoxHM": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetDashindexLambdaFunction"
+              },
+              "CodeSha256": "TTF03btZZdZ//12x8UPHyaURQuoVwOt0Ty+tN9mMlgk="
+            }
+          },
+          "GetDashrestaurantsLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/workshop-tomjo/dev/1543656737471-2018-12-01T09:32:17.471Z/workshop-tomjo.zip"
+              },
+              "FunctionName": "workshop-tomjo-dev-get-restaurants",
+              "Handler": "functions/get-restaurants.handler",
+              "MemorySize": 1024,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs8.10",
+              "Timeout": 6,
+              "Tags": [
+                {
+                  "Key": "TEAM",
+                  "Value": "test"
+                }
+              ],
+              "Environment": {
+                "Variables": {
+                  "restaurants_table": {
+                    "Ref": "restaurantsTable"
+                  }
+                }
+              }
+            },
+            "DependsOn": [
+              "GetDashrestaurantsLogGroup",
+              "IamRoleLambdaExecution"
+            ]
+          },
+          "GetDashrestaurantsLambdaVersionfB9mKd3rxi5TRfablwtONKwNG8BVUvM4UktP3q4Ltms": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetDashrestaurantsLambdaFunction"
+              },
+              "CodeSha256": "TTF03btZZdZ//12x8UPHyaURQuoVwOt0Ty+tN9mMlgk="
+            }
+          },
+          "SearchDashrestaurantsLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/workshop-tomjo/dev/1543656737471-2018-12-01T09:32:17.471Z/workshop-tomjo.zip"
+              },
+              "FunctionName": "workshop-tomjo-dev-search-restaurants",
+              "Handler": "functions/search-restaurants.handler",
+              "MemorySize": 1024,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs8.10",
+              "Timeout": 6,
+              "Tags": [
+                {
+                  "Key": "TEAM",
+                  "Value": "test"
+                }
+              ],
+              "Environment": {
+                "Variables": {
+                  "restaurants_table": {
+                    "Ref": "restaurantsTable"
+                  }
+                }
+              }
+            },
+            "DependsOn": [
+              "SearchDashrestaurantsLogGroup",
+              "IamRoleLambdaExecution"
+            ]
+          },
+          "SearchDashrestaurantsLambdaVersionu4FTb2qOMoqxdCAyjQfiBn0Vedm6pMMQRwp1OUg5Gig": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "SearchDashrestaurantsLambdaFunction"
+              },
+              "CodeSha256": "TTF03btZZdZ//12x8UPHyaURQuoVwOt0Ty+tN9mMlgk="
+            }
+          },
+          "PlaceDashorderLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/workshop-tomjo/dev/1543656737471-2018-12-01T09:32:17.471Z/workshop-tomjo.zip"
+              },
+              "FunctionName": "workshop-tomjo-dev-place-order",
+              "Handler": "functions/place-order.handler",
+              "MemorySize": 1024,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs8.10",
+              "Timeout": 6,
+              "Tags": [
+                {
+                  "Key": "TEAM",
+                  "Value": "test"
+                }
+              ],
+              "Environment": {
+                "Variables": {
+                  "order_events_stream": {
+                    "Ref": "orderEventsStream"
+                  }
+                }
+              }
+            },
+            "DependsOn": [
+              "PlaceDashorderLogGroup",
+              "IamRoleLambdaExecution"
+            ]
+          },
+          "PlaceDashorderLambdaVersionduAlEemJkGG6rb0lvWIJlVfvEYNBROkHLhO019mtUDw": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "PlaceDashorderLambdaFunction"
+              },
+              "CodeSha256": "TTF03btZZdZ//12x8UPHyaURQuoVwOt0Ty+tN9mMlgk="
+            }
+          },
+          "NotifyDashrestaurantLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/workshop-tomjo/dev/1543656737471-2018-12-01T09:32:17.471Z/workshop-tomjo.zip"
+              },
+              "FunctionName": "workshop-tomjo-dev-notify-restaurant",
+              "Handler": "functions/notify-restaurant.handler",
+              "MemorySize": 1024,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs8.10",
+              "Timeout": 6,
+              "Tags": [
+                {
+                  "Key": "TEAM",
+                  "Value": "test"
+                }
+              ],
+              "Environment": {
+                "Variables": {
+                  "order_events_stream": {
+                    "Ref": "orderEventsStream"
+                  },
+                  "restaurant_notification_topic": {
+                    "Ref": "restaurantNotificationTopic"
+                  }
+                }
+              }
+            },
+            "DependsOn": [
+              "NotifyDashrestaurantLogGroup",
+              "IamRoleLambdaExecution"
+            ]
+          },
+          "NotifyDashrestaurantLambdaVersionjZtDwRiIscDLkvunBs9xYaXkG9iawwoMKfhIpgOYs": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "NotifyDashrestaurantLambdaFunction"
+              },
+              "CodeSha256": "TTF03btZZdZ//12x8UPHyaURQuoVwOt0Ty+tN9mMlgk="
+            }
+          },
+          "ApiGatewayRestApi": {
+            "Type": "AWS::ApiGateway::RestApi",
+            "Properties": {
+              "Name": "dev-workshop-tomjo",
+              "EndpointConfiguration": {
+                "Types": [
+                  "EDGE"
+                ]
+              }
+            }
+          },
+          "ApiGatewayResourceRestaurants": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "restaurants",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceRestaurantsSearch": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceRestaurants"
+              },
+              "PathPart": "search",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceOrders": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "orders",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetDashindexLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodRestaurantsGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceRestaurants"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetDashrestaurantsLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodRestaurantsSearchPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceRestaurantsSearch"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "SearchDashrestaurantsLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodOrdersPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceOrders"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "PlaceDashorderLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayDeployment1543656737923": {
+            "Type": "AWS::ApiGateway::Deployment",
+            "Properties": {
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "StageName": "dev"
+            },
+            "DependsOn": [
+              "ApiGatewayMethodGet",
+              "ApiGatewayMethodRestaurantsGet",
+              "ApiGatewayMethodRestaurantsSearchPost",
+              "ApiGatewayMethodOrdersPost"
+            ]
+          },
+          "GetDashindexLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetDashindexLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "apigateway.",
+                    {
+                      "Ref": "AWS::URLSuffix"
+                    }
+                  ]
+                ]
+              },
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetDashrestaurantsLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetDashrestaurantsLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "apigateway.",
+                    {
+                      "Ref": "AWS::URLSuffix"
+                    }
+                  ]
+                ]
+              },
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "SearchDashrestaurantsLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "SearchDashrestaurantsLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "apigateway.",
+                    {
+                      "Ref": "AWS::URLSuffix"
+                    }
+                  ]
+                ]
+              },
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "PlaceDashorderLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "PlaceDashorderLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "apigateway.",
+                    {
+                      "Ref": "AWS::URLSuffix"
+                    }
+                  ]
+                ]
+              },
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "NotifyDashrestaurantEventSourceMappingKinesisOrderEventsStream": {
+            "Type": "AWS::Lambda::EventSourceMapping",
+            "DependsOn": "IamRoleLambdaExecution",
+            "Properties": {
+              "BatchSize": 10,
+              "EventSourceArn": {
+                "Fn::GetAtt": [
+                  "orderEventsStream",
+                  "Arn"
+                ]
+              },
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "NotifyDashrestaurantLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "StartingPosition": "TRIM_HORIZON",
+              "Enabled": "True"
+            }
+          },
+          "restaurantsTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "TableName": "restaurants-dev-tomjo",
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "name",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "name",
+                  "KeyType": "HASH"
+                }
+              ],
+              "ProvisionedThroughput": {
+                "ReadCapacityUnits": 1,
+                "WriteCapacityUnits": 1
+              }
+            }
+          },
+          "orderEventsStream": {
+            "Type": "AWS::Kinesis::Stream",
+            "Properties": {
+              "Name": "orders-dev-tomjo",
+              "ShardCount": 1
+            }
+          },
+          "restaurantNotificationTopic": {
+            "Type": "AWS::SNS::Topic",
+            "Properties": {
+              "DisplayName": "restaurants-dev-tomjo",
+              "TopicName": "restaurants-dev-tomjo"
+            }
+          },
+          "mySubscription": {
+            "Type": "AWS::SNS::Subscription",
+            "Properties": {
+              "Endpoint": "tom.jorissen.it@gmail.com",
+              "Protocol": "email",
+              "TopicArn": {
+                "Ref": "restaurantNotificationTopic"
+              }
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          },
+          "GetDashindexLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetDashindexLambdaVersion0oyYDAewWAO3YUVMzTFoJf1z64ZBygIaXHAaecoxHM"
+            }
+          },
+          "GetDashrestaurantsLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetDashrestaurantsLambdaVersionfB9mKd3rxi5TRfablwtONKwNG8BVUvM4UktP3q4Ltms"
+            }
+          },
+          "SearchDashrestaurantsLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "SearchDashrestaurantsLambdaVersionu4FTb2qOMoqxdCAyjQfiBn0Vedm6pMMQRwp1OUg5Gig"
+            }
+          },
+          "PlaceDashorderLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "PlaceDashorderLambdaVersionduAlEemJkGG6rb0lvWIJlVfvEYNBROkHLhO019mtUDw"
+            }
+          },
+          "NotifyDashrestaurantLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "NotifyDashrestaurantLambdaVersionjZtDwRiIscDLkvunBs9xYaXkG9iawwoMKfhIpgOYs"
+            }
+          },
+          "ServiceEndpoint": {
+            "Description": "URL of the service endpoint",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "ApiGatewayRestApi"
+                  },
+                  {
+                    "Fn::Sub": ".execute-api.${AWS::Region}."
+                  },
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/dev"
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "coreCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket"
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          }
+        }
+      },
+      "vpc": {}
+    },
+    "plugins": [
+      "serverless-pseudo-parameters"
+    ],
+    "pluginsData": {},
+    "functions": {
+      "get-index": {
+        "handler": "functions/get-index.handler",
+        "events": [
+          {
+            "http": {
+              "path": "",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "environment": {
+          "restaurants_api": {
+            "Fn::Join": [
+              "",
+              [
+                "https://",
+                {
+                  "Ref": "ApiGatewayRestApi"
+                },
+                ".execute-api.eu-west-1.amazonaws.com/dev/restaurants"
+              ]
+            ]
+          },
+          "orders_api": {
+            "Fn::Join": [
+              "",
+              [
+                "https://",
+                {
+                  "Ref": "ApiGatewayRestApi"
+                },
+                ".execute-api.eu-west-1.amazonaws.com/dev/orders"
+              ]
+            ]
+          }
+        },
+        "name": "workshop-tomjo-dev-get-index",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs8.10",
+        "vpc": {}
+      },
+      "get-restaurants": {
+        "handler": "functions/get-restaurants.handler",
+        "events": [
+          {
+            "http": {
+              "path": "restaurants",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "environment": {
+          "restaurants_table": {
+            "Ref": "restaurantsTable"
+          }
+        },
+        "name": "workshop-tomjo-dev-get-restaurants",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs8.10",
+        "vpc": {}
+      },
+      "search-restaurants": {
+        "handler": "functions/search-restaurants.handler",
+        "events": [
+          {
+            "http": {
+              "path": "restaurants/search",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "environment": {
+          "restaurants_table": {
+            "Ref": "restaurantsTable"
+          }
+        },
+        "name": "workshop-tomjo-dev-search-restaurants",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs8.10",
+        "vpc": {}
+      },
+      "place-order": {
+        "handler": "functions/place-order.handler",
+        "events": [
+          {
+            "http": {
+              "path": "orders",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "environment": {
+          "order_events_stream": {
+            "Ref": "orderEventsStream"
+          }
+        },
+        "name": "workshop-tomjo-dev-place-order",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs8.10",
+        "vpc": {}
+      },
+      "notify-restaurant": {
+        "handler": "functions/notify-restaurant.handler",
+        "events": [
+          {
+            "stream": {
+              "type": "kinesis",
+              "arn": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"IamRoleLambdaExecution\"][\"Properties\"][\"Policies\"][0][\"PolicyDocument\"][\"Statement\"][5][\"Resource\"][0]"
+              }
+            }
+          }
+        ],
+        "environment": {
+          "order_events_stream": {
+            "Ref": "orderEventsStream"
+          },
+          "restaurant_notification_topic": {
+            "Ref": "restaurantNotificationTopic"
+          }
+        },
+        "name": "workshop-tomjo-dev-notify-restaurant",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs8.10",
+        "vpc": {}
+      }
+    },
+    "resources": {
+      "Resources": {
+        "restaurantsTable": {
+          "Type": "AWS::DynamoDB::Table",
+          "Properties": {
+            "TableName": "restaurants-dev-tomjo",
+            "AttributeDefinitions": [
+              {
+                "AttributeName": "name",
+                "AttributeType": "S"
+              }
+            ],
+            "KeySchema": [
+              {
+                "AttributeName": "name",
+                "KeyType": "HASH"
+              }
+            ],
+            "ProvisionedThroughput": {
+              "ReadCapacityUnits": 1,
+              "WriteCapacityUnits": 1
+            }
+          }
+        },
+        "orderEventsStream": {
+          "Type": "AWS::Kinesis::Stream",
+          "Properties": {
+            "Name": "orders-dev-tomjo",
+            "ShardCount": 1
+          }
+        },
+        "restaurantNotificationTopic": {
+          "Type": "AWS::SNS::Topic",
+          "Properties": {
+            "DisplayName": "restaurants-dev-tomjo",
+            "TopicName": "restaurants-dev-tomjo"
+          }
+        },
+        "mySubscription": {
+          "Type": "AWS::SNS::Subscription",
+          "Properties": {
+            "Endpoint": "tom.jorissen.it@gmail.com",
+            "Protocol": "email",
+            "TopicArn": {
+              "Ref": "restaurantNotificationTopic"
+            }
+          }
+        }
+      },
+      "Outputs": {}
+    },
+    "artifact": "C:\\workspace\\production-ready-serverless-workshop-devternity-demo\\.serverless\\workshop-tomjo.zip"
+  },
+  "package": {
+    "artifactDirectoryName": "serverless/workshop-tomjo/dev/1543656737471-2018-12-01T09:32:17.471Z",
+    "artifact": "workshop-tomjo.zip"
+  }
+}
