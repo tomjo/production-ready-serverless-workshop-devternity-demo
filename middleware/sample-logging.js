@@ -1,4 +1,5 @@
 const Log = require('../lib/log');
+const CorrelationIds = require('../lib/correlation-ids');
 
 // config should be { sampleRate: double } where sampleRate is between 0.0-1.0
 module.exports = (config) => {
@@ -6,7 +7,14 @@ module.exports = (config) => {
     let rollback = undefined;
 
     const isDebugEnabled = () => {
-        return sampleRate && Math.random() <= sampleRate
+        const context = CorrelationIds.get();
+        if (context['debug-log-enabled'] === 'true') {
+            return true
+        } else if (context['debug-log-enabled'] === 'false') {
+            return false
+        } else {
+            return sampleRate && Math.random() <= sampleRate
+        }
     };
 
     return {
